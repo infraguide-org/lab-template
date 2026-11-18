@@ -60,7 +60,7 @@ Current labs:
 |---|---|
 | `lab-ceph` | plain folder, `cephadm/` |
 | `lab-openstack` | plain folder, `kolla-ansible/` and `cephadm/` |
-| `lab-scs` | submodule `lab-scs-config` (OSISM configuration repository; OSISM expects `environments/` and `inventory/` at the repository root) |
+| `lab-scs` | submodule `lab-scs-config` in `deploy/openstack/` (OSISM configuration repository; OSISM expects `environments/` and `inventory/` at the repository root) |
 
 ## Quick start for any lab
 
