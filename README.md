@@ -34,15 +34,23 @@ Name a satellite by its **role**, not by the tool that fills the role today. Rol
 
 ```
 lab-<topic>/
-├── README.md        # what the lab is, three commands to start
-├── Makefile         # init, update, status
-├── requirements.txt # tools needed on the workstation
-├── docs/            # lab documentation
-├── scripts/         # glue scripts that work across the satellites
-├── deploy/          # tool configuration (plain folder or submodule)
-├── artifacts/       # optional, submodule
-└── modules/         # optional, submodule
+├── .github/workflows/slides.yml  # builds the slides and the lab page
+├── CLAUDE.md          # points to CONTRIBUTING.md
+├── CONTRIBUTING.md    # contribution rules, commit message format
+├── LICENSE            # MIT License
+├── README.md          # what the lab is, repository layout, slides
+├── conf/              # env.yaml, net-diagram.yaml, tmuxp.yaml, user-data.yaml
+├── deploy/            # tool configuration, one folder per tool, or a submodule
+├── modules/           # additional modules (automation, testing), or a submodule
+├── scripts/           # create-env.sh and glue scripts across the satellites
+├── slides/            # slide sources (src) and build scripts (scripts)
+└── status/            # build.yml, result of the automatic lab build
 ```
+
+Optional:
+* `Makefile` with `init`, `update` and `status`, when the lab has satellites
+* `artifacts/` as a submodule
+* `tests/` with lab specific tests, `scripts/create-env.sh` copies them next to the common ones
 
 Use the same directory name per role in every lab, so that scripts and documentation carry over from lab to lab. `deploy/` holds what gets deployed.
 
@@ -50,7 +58,8 @@ Current labs:
 
 | Lab | `deploy/` |
 |---|---|
-| `lab-openstack` | plain folder with the Kolla-Ansible configuration |
+| `lab-ceph` | plain folder, `cephadm/` |
+| `lab-openstack` | plain folder, `kolla-ansible/` and `cephadm/` |
 | `lab-scs` | submodule `lab-scs-config` (OSISM configuration repository; OSISM expects `environments/` and `inventory/` at the repository root) |
 
 ## Quick start for any lab
@@ -58,16 +67,15 @@ Current labs:
 ```bash
 git clone --recurse-submodules https://github.com/infraguide-org/lab-<topic>.git
 cd lab-<topic>
-make init
 ```
 
-Without `--recurse-submodules`:
+Without `--recurse-submodules` (or `make init` in a lab with a `Makefile`):
 
 ```bash
 git submodule update --init --recursive
 ```
 
-Minimal `Makefile`:
+Minimal `Makefile` for a lab with satellites:
 
 ```make
 init:    ; git submodule update --init --recursive
@@ -145,10 +153,10 @@ Split by component only when the tools differ. Parts that share inventory, host 
 
 ## Creating a new lab
 
-1. Create `lab-<topic>` from this template ("Use this template" on GitHub). It brings `Makefile`, `requirements.txt`, `docs/` and `scripts/`. Replace this README with the one of the lab.
+1. Create `lab-<topic>` from this template ("Use this template" on GitHub). Replace `lab-template` with `lab-<topic>` in all files, "Template Lab" in `slides/scripts/make-index.sh`, and fill `conf/` (the files are an example taken from `lab-ceph`). Replace this README with the one of the lab.
 2. Create one satellite per unit that needs its own repository root (`lab-<topic>-<role>`).
 3. Add the satellites as submodules at their role directories.
-4. Test from scratch: clone with `--recurse-submodules` into an empty directory and run `make init`.
+4. Test from scratch: clone with `--recurse-submodules` into an empty directory.
 
 ## Moving a configuration out of an entry repository
 
