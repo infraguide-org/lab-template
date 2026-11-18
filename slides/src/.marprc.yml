@@ -1,0 +1,12 @@
+# Source: https://github.com/infraguide-org/lab-template
+# Copyright (c) 2026 infraguide.org, MIT License
+html: true
+theme: default
+allowLocalFiles: true
+parallel: 1
+inputDir: ./
+output: ../dist/
+options:
+  emoji:
+    shortcode: false
+    unicode: false

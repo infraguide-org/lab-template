@@ -1,0 +1,30 @@
+# Source: https://github.com/infraguide-org/lab-template
+# Copyright (c) 2026 infraguide.org, MIT License
+---
+session_name: lab-template
+windows:
+  - window_name: ceph
+    layout: tiled
+    shell_command_before:
+      - cd ~/
+    panes:
+      - ssh -t cephmon01.strg.lab.nfgd.net sudo su -
+      - ssh -t cephmon02.strg.lab.nfgd.net sudo su -
+      - ssh -t cephmon03.strg.lab.nfgd.net sudo su -
+      - ssh -t cephosd01.strg.lab.nfgd.net sudo su -
+      - ssh -t cephosd02.strg.lab.nfgd.net sudo su -
+      - ssh -t cephosd03.strg.lab.nfgd.net sudo su -
+      - sudo su -
+      - sudo su -
+      - cd  ~/ceph
+  - window_name: infra
+    layout: tiled
+    shell_command_before:
+      - cd ~/
+    panes:
+      - ssh -t dns.lab.nfgd.net        sudo su -
+      - ssh -t proxy.lab.nfgd.net      sudo su -
+      - ssh -t recorder.lab.nfgd.net   sudo su -
+      - ssh -t registry.lab.nfgd.net   sudo su -
+      - ssh -t hypervisor.lab.nfgd.net
+      - ''

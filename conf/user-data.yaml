@@ -1,0 +1,40 @@
+#cloud-config
+# Source: https://github.com/infraguide-org/lab-template
+# Copyright (c) 2026 infraguide.org, MIT License
+write_files:
+  - path: /etc/systemd/system/setup-sandbox-environment.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=Setup Sandbox (Post-Reboot)
+      After=network-online.target pve-cluster.service pvedaemon.service
+      Wants=network-online.target pve-cluster.service
+      ConditionPathExists=!/var/lib/setup-sandbox-environment.done
+
+      [Service]
+      Type=oneshot
+      # network-online.target can be reached before the DHCP lease brings the DNS server,
+      # so wait up to 5 minutes until nfgd.net resolves
+      ExecStartPre=/bin/bash -c 'for i in {1..60}; do getent hosts nfgd.net > /dev/null && exit 0; sleep 5; done; echo "nfgd.net does not resolve after 5 minutes" >&2; exit 1'
+      ExecStart=/bin/bash -c '\
+        set -euo pipefail; \
+        source /etc/profile.d/60-lab.sh;                                                      \
+        curl -fsSL nfgd.net/setup/template-vm | bash;                                         \
+        curl -fsSL nfgd.net/setup/lab-template    | bash;                                         \
+      '
+      ExecStartPost=/usr/bin/touch  /var/lib/setup-sandbox-environment.done
+      ExecStartPost=/usr/bin/systemctl disable setup-sandbox-environment.service
+      RemainAfterExit=yes
+
+      [Install]
+      WantedBy=multi-user.target
+runcmd:
+  - curl -fsSL nfgd.net/setup/sandbox | bash
+  - systemctl daemon-reload
+  - systemctl enable setup-sandbox-environment.service
+power_state:
+  delay: "now"
+  mode: reboot
+  message: "Rebooting post cloud-init setup"
+  timeout: 30
+  condition: True

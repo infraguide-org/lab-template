@@ -1,0 +1,12 @@
+# Source: https://github.com/infraguide-org/lab-template
+# Copyright (c) 2026 infraguide.org, MIT License
+# Result of the automatic lab build.
+# Updated periodically by the build job; infraguide.org fetches this file from main at its build time.
+# checks[].text is shown as is on the lab page; status is passed, failed or any other value for pending.
+date: 2026-11-18
+node: none
+duration: 0 sec
+checks:
+  - name: nodes_created
+    text: Nodes created
+    status: pending
